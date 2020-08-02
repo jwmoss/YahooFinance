@@ -30,7 +30,7 @@ CompanyName = 'Unknown'
 Copyright = '(c) Jonathan Moss. All rights reserved.'
 
 # Description of the functionality provided by this module
-Description = 'PowerShell Module to pull data from YahooFinance'
+Description = 'PowerShell Module to pull data from Yahoo Finance'
 
 # Minimum version of the PowerShell engine required by this module
 # PowerShellVersion = ''

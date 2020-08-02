@@ -1,6 +1,10 @@
 # Dot source public/private functions
 $public  = @(Get-ChildItem -Path (Join-Path -Path $PSScriptRoot -ChildPath 'Public/*.ps1')  -Recurse -ErrorAction Stop)
 $private = @(Get-ChildItem -Path (Join-Path -Path $PSScriptRoot -ChildPath 'Private/*.ps1') -Recurse -ErrorAction Stop)
+
+$script:url_base = "https://query1.finance.yahoo.com"
+$script:scrape_base = "https://finance.yahoo.com/quote"
+
 foreach ($import in @($public + $private)) {
     try {
         . $import.FullName
