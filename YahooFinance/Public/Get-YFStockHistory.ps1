@@ -1,7 +1,7 @@
 function Get-YFStockHistory {
     [CmdletBinding()]
     param(
-        [string[]]
+        [string]
         $Ticker,
 
         [ValidateSet(
@@ -39,10 +39,10 @@ function Get-YFStockHistory {
         $Interval = "1d",
 
         [datetime]
-        $Start,
+        $Start = (Get-Date -Hour 0 -Minute 00 -Second 00).AddMonths(-5),
 
         [datetime]
-        $End,
+        $End = (Get-Date -Hour 0 -Minute 00 -Second 00),
 
         [ValidateSet(
             'ticker',
@@ -69,14 +69,23 @@ function Get-YFStockHistory {
     }
 
     $Params = @{
-        interval       = $Interval
-        includePrePost = "prepost"
-        events         = "div,splits"
-        period1        = Get-UnixTime $Start
-        period2        = Get-UnixTime $End
+        period1 = Get-UnixTime $Start
+        period2 = Get-UnixTime $End
+        interval = $Interval
+        events = "history"
     }
 
-    $url = ("$script:url_base/v8/finance/chart/{0}") -f $ticker
-    Invoke-RestMethod -Method "Get" -Uri $url -Body $Params
+    $url = "https://query1.finance.yahoo.com/v7/finance/download/{0}" -f $Ticker
 
+    Invoke-RestMethod $url -Body $Params | Convertfrom-csv | Foreach-object {
+        [PSCustomObject]@{
+            Date = Get-Date ($_.Date) -format "yyyy-MM-dd"
+            Open = $_.Open
+            High = $_.High
+            Low = $_.Low
+            Close = $_.Close
+            AdjClose = $_.'Adj Close'
+            Volume = $_.Volume
+        }
+    }
 }
