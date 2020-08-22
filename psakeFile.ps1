@@ -3,6 +3,7 @@ properties {
     # This modifies the default behavior from the "Build" task
     # in the PowerShellBuild shared psake task module
     $PSBPreference.Build.CompileModule = $false
+    $outputModDir = Join-Path -Path $outputDir -ChildPath $env:BHProjectName
 }
 
 task default -depends Test
