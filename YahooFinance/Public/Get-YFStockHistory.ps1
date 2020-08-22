@@ -19,9 +19,14 @@ function Get-YFStockHistory {
         The end date for stock history
     .EXAMPLE
         PS C:\> Get-YFStockHistory -Ticker AAPL -Period 5d -Interval 1m
+
         Retrives 5 day history for ticker AAPL in 1 minute intervals
+
+    .EXAMPLE
         PS C:\> Get-YFStockHistory -Ticker TSLA
+
         Retrives the max stock history for ticker TSLA in 1 day intervals
+
     .INPUTS
         NA
     .OUTPUTS

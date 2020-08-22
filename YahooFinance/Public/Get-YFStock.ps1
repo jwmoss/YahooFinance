@@ -9,7 +9,9 @@ function Get-YFStock {
         The stock ticker you to pull history
     .EXAMPLE
         PS C:\> Get-YFStock -Ticker AAPL,TSLA
+
         Retrives stock ticker information for Apple and Tesla
+
     .INPUTS
         Inputs (if any)
     .OUTPUTS
