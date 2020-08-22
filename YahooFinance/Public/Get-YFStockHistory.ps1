@@ -1,7 +1,36 @@
 function Get-YFStockHistory {
+
+    <#
+    .SYNOPSIS
+        Returns historical stock information
+    .DESCRIPTION
+        Returns historical stock information
+    .PARAMETER Ticker
+        The stock ticker you to pull history
+    .PARAMETER Period
+        How far back you want to get the history of the stock
+    .PARAMETER Interval
+        The interval for how much data you want to return between the period
+    .PARAMETER Start
+        The start date for stock history
+    .PARAMETER End
+        The end date for stock history
+    .PARAMETER GroupBy
+        The end date for stock history
+    .EXAMPLE
+        PS C:\> Get-YFStockHistory -Ticker AAPL -Period 5d -Interval 1m
+        Retrives 5 day history for ticker AAPL in 1 minute intervals
+    .INPUTS
+        Inputs (if any)
+    .OUTPUTS
+        Output (if any)
+    .NOTES
+        Currently using the yahoo finance api to pull the information
+    #>
+
     [CmdletBinding()]
     param(
-        [string]
+        [string[]]
         $Ticker,
 
         [ValidateSet(
@@ -42,50 +71,41 @@ function Get-YFStockHistory {
         $Start = (Get-Date -Hour 0 -Minute 00 -Second 00).AddMonths(-5),
 
         [datetime]
-        $End = (Get-Date -Hour 0 -Minute 00 -Second 00),
-
-        [ValidateSet(
-            'ticker',
-            'column'
-        )]
-        [string]
-        $GroupBy = "column",
-
-        [switch]
-        $PrePost,
-
-        [switch]
-        $AutoAdjust,
-
-        [switch]
-        $Actions,
-
-        [switch]
-        $Rounding
+        $End = (Get-Date -Hour 0 -Minute 00 -Second 00)
     )
 
-    if ($Interval -eq "30m") {
-        $Interval = "15m"
-    }
-
-    $Params = @{
-        period1 = Get-UnixTime $Start
-        period2 = Get-UnixTime $End
-        interval = $Interval
-        events = "history"
-    }
-
-    $url = "$script:url_base/v7/finance/download/{0}" -f $Ticker
-
-    Invoke-RestMethod $url -Body $Params | Convertfrom-csv | Foreach-object {
-        [PSCustomObject]@{
-            Date = Get-Date ($_.Date) -format "yyyy-MM-dd"
-            Open = $_.Open
-            High = $_.High
-            Low = $_.Low
-            Close = $_.Close
-            AdjClose = $_.'Adj Close'
-            Volume = [int32]$_.Volume
+    Begin {
+        if ($Interval -eq "30m") {
+            $Interval = "15m"
         }
+    }
+    Process {
+
+        $Params = @{
+            period1  = Get-UnixTime $Start
+            period2  = Get-UnixTime $End
+            interval = $Interval
+            events   = "history"
+        }
+
+        $ticker | ForEach-Object {
+            $url = "$script:url_base/v7/finance/download/{0}" -f $_
+            $stock = $_
+            Invoke-RestMethod $url -Body $Params | Convertfrom-csv | Foreach-object {
+                [PSCustomObject]@{
+                    Ticker   = $stock
+                    Date     = Get-Date ($_.Date) -format "yyyy-MM-dd"
+                    Open     = $_.Open
+                    High     = $_.High
+                    Low      = $_.Low
+                    Close    = $_.Close
+                    AdjClose = $_.'Adj Close'
+                    Volume   = [int32]$_.Volume
+                }
+            }
+        }
+    }
+    End {
+
     }
 }
