@@ -20,10 +20,12 @@ function Get-YFStockHistory {
     .EXAMPLE
         PS C:\> Get-YFStockHistory -Ticker AAPL -Period 5d -Interval 1m
         Retrives 5 day history for ticker AAPL in 1 minute intervals
+        PS C:\> Get-YFStockHistory -Ticker TSLA
+        Retrives the max stock history for ticker TSLA in 1 day intervals
     .INPUTS
-        Inputs (if any)
+        NA
     .OUTPUTS
-        Output (if any)
+        NA
     .NOTES
         Currently using the yahoo finance api to pull the information
     #>
