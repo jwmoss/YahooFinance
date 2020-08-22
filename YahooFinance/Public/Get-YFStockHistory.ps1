@@ -18,9 +18,9 @@ function Get-YFStockHistory {
     .PARAMETER GroupBy
         The end date for stock history
     .EXAMPLE
-        PS C:\> Get-YFStockHistory -Ticker AAPL -Period 5d -Interval 1m
+        PS C:\> Get-YFStockHistory -Ticker AAPL -Interval 1m
 
-        Retrives 5 day history for ticker AAPL in 1 minute intervals
+        Retrives max history for ticker AAPL in 1 minute intervals
 
     .EXAMPLE
         PS C:\> Get-YFStockHistory -Ticker TSLA
@@ -39,22 +39,6 @@ function Get-YFStockHistory {
     param(
         [string[]]
         $Ticker,
-
-        [ValidateSet(
-            "1d",
-            "5d",
-            "1mo",
-            "3mo",
-            "6mo",
-            "1y",
-            "2y",
-            "5y",
-            "10y",
-            "ytd",
-            "max"
-        )]
-        [string]
-        $Period = "max",
 
         [ValidateSet(
             "1m",
