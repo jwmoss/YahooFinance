@@ -75,7 +75,7 @@ function Get-YFStockHistory {
         events = "history"
     }
 
-    $url = "https://query1.finance.yahoo.com/v7/finance/download/{0}" -f $Ticker
+    $url = "$script:url_base/v7/finance/download/{0}" -f $Ticker
 
     Invoke-RestMethod $url -Body $Params | Convertfrom-csv | Foreach-object {
         [PSCustomObject]@{
@@ -85,7 +85,7 @@ function Get-YFStockHistory {
             Low = $_.Low
             Close = $_.Close
             AdjClose = $_.'Adj Close'
-            Volume = $_.Volume
+            Volume = [int32]$_.Volume
         }
     }
 }
